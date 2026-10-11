@@ -1,0 +1,6 @@
+{
+  "name": "agent-doorbell-browser-tests",
+  "private": true,
+  "scripts": {"test:browser": "playwright test"},
+  "devDependencies": {"@playwright/test": "1.63.0", "agent-browser": "0.38.2"}
+}

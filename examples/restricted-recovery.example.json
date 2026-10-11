@@ -1,0 +1,15 @@
+{
+  "credential_state": "partial",
+  "account_present": false,
+  "uid_reused": false,
+  "gid_reused": false,
+  "socket_present": true,
+  "socket_active": false,
+  "socket_inode_matches_record": true,
+  "socket_connection_refused": true,
+  "socket_owner_matches_record": true,
+  "owner_ssh_policy_unchanged": true,
+  "strict_host_key_checking": "yes",
+  "receipts_preserved": true,
+  "backups_preserved": true
+}

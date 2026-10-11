@@ -1,0 +1,20 @@
+[Unit]
+Description=Agent Doorbell local camera and event app
+After=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=%h/agent-doorbell
+Environment=DOORBELL_DATA_DIR=%h/.local/share/agent-doorbell
+Environment=DOORBELL_CAMERA=auto
+Environment=DOORBELL_DETECTOR=hog
+Environment=DOORBELL_CAMERA_SHARE_URL=http://127.0.0.1:8000
+EnvironmentFile=-%h/.config/agent-doorbell/environment
+ExecStart=%h/agent-doorbell/.venv/bin/python -m agent_doorbell --host 0.0.0.0 --port 8877
+Restart=on-failure
+RestartSec=5
+UMask=0077
+NoNewPrivileges=true
+
+[Install]
+WantedBy=default.target

@@ -1,0 +1,7 @@
+{
+  "enabled": false,
+  "inbox": "/your/selected/private/proposal-inbox",
+  "ssh_target": "doorbell-proposer@your-pi-host",
+  "host_key_alias": "your-previously-trusted-pi-alias",
+  "identity_file": "/your/private/dedicated-proposer-key"
+}

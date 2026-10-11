@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Guest PIN</title>
+  <link rel="stylesheet" href="/static/app.css">
+  <link rel="stylesheet" href="/static/pin.css">
+</head>
+<body>
+  <main class="pin-page">
+    <p class="eyebrow">SIMULATION ONLY</p>
+    <h1>Enter the guest PIN.</h1>
+    <p class="muted">One use. A matching PIN records a simulated pass. No physical lock is connected.</p>
+    <p id="pin-dots" aria-live="polite">Enter a 6-digit PIN</p>
+    <div id="pin-keys"></div>
+    <p id="pin-result" role="status"></p>
+  </main>
+  <script src="/static/pin.js"></script>
+</body>
+</html>

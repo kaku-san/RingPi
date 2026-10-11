@@ -1,0 +1,6 @@
+.pin-page{max-width:420px;margin:40px auto;padding:24px}
+.pin-page h1{font-family:Georgia,serif;font-weight:400;font-size:32px;letter-spacing:-.6px}
+#pin-dots{font-size:28px;letter-spacing:8px;min-height:44px}
+#pin-keys{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:18px}
+#pin-keys button{min-height:56px;font-size:20px;border-radius:12px;background:#f5f6ef;border:1px solid #dfe5d7;color:#244d3a}
+#pin-result{min-height:48px;line-height:1.6}

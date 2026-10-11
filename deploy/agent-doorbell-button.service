@@ -1,0 +1,17 @@
+[Unit]
+Description=Agent Doorbell GPIO button
+After=agent-doorbell.service
+
+[Service]
+Type=simple
+WorkingDirectory=%h/agent-doorbell
+# DOORBELL_BUTTON_BCM is required in the environment file. There is no default pin.
+EnvironmentFile=-%h/.config/agent-doorbell/environment
+ExecStart=%h/agent-doorbell/.venv/bin/python %h/agent-doorbell/scripts/gpio_button.py
+Restart=on-failure
+RestartSec=5
+UMask=0077
+NoNewPrivileges=true
+
+[Install]
+WantedBy=default.target

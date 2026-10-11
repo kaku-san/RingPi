@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#214c3a"><meta name="description" content="Your doorstep, on your own terms. A private, local-first doorbell.">
+  <title>Agent Doorbell · Your doorstep</title>
+  <link rel="icon" href="/static/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/static/app.css"><script src="/static/app.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="#home" aria-label="Agent Doorbell home"><span class="brand-mark">⌑</span><span>doorbell<span class="brand-sub">a little closer to home</span></span></a>
+      <div class="home-label"><span class="home-dot"></span> MY FRONT DOOR <span class="local-label">LOCAL</span></div>
+      <nav aria-label="Main navigation">
+        <button class="nav-item active" data-view="home"><span aria-hidden="true">⌂</span> Overview</button>
+        <button class="nav-item" data-view="people"><span aria-hidden="true">♧</span> Familiar people</button>
+        <button class="nav-item" data-view="agent"><span aria-hidden="true">✳</span> Guest approval</button>
+        <button class="nav-item" data-view="history"><span aria-hidden="true">◷</span> Activity <span id="nav-event-count" class="nav-count">0</span></button>
+      </nav>
+      <div class="sidebar-bottom"><div class="privacy-seal">◈</div><strong>Your data, your choice.</strong><p id="privacy-sharing">Camera images stay on this device. Optional Bot sharing is under Guest approval.</p><button class="text-button settings-open">Device settings <span>↗</span></button><div class="sidebar-version">AGENT DOORBELL <span>v0.3.13</span></div></div>
+    </aside>
+
+    <main>
+      <header class="topbar"><div class="breadcrumb">My home <span>/</span> <strong id="page-crumb">Overview</strong></div><div class="top-actions"><span id="connection" class="connection"><i></i> Connecting</span><button id="sound-toggle" class="icon-button" aria-label="Enable chime" title="Enable chime">♪</button><button class="avatar settings-open" aria-label="Open device settings">H</button></div></header>
+      <div id="simulated-banner" class="test-banner" hidden>TEST MODE · Camera frames are synthetic. No real visitors.</div>
+      <div id="fatal-banner" class="error-banner" hidden></div>
+
+      <section id="view-home" class="view active">
+        <div class="page-heading"><div><p class="eyebrow" id="today-label">YOUR EVERYDAY, A LITTLE CALMER</p><h1>Your doorstep.<br><em>Your peace of mind.</em></h1><p class="intro">A familiar face, a delivery, a little hello. Stay close to what matters.</p></div><button id="test-ring" class="primary-button"><span aria-hidden="true">♧</span> Test the doorbell <span aria-hidden="true">↗</span></button></div>
+        <section class="card people-setup" aria-label="Add people setup"><div><p class="eyebrow">SET UP FAMILIAR PEOPLE</p><h2>Add people.</h2><p>Save a name, choose reference photos, then try a local recognition test.</p><p id="people-setup-count" class="muted small">Checking your local profiles…</p></div><button id="setup-add-people" class="secondary-button">Add people →</button></section>
+        <div class="overview-grid">
+          <div class="doorstep-stack">
+          <section class="camera-card card" aria-label="Front door camera">
+            <div class="card-top"><div><span class="tiny-dot" id="camera-dot"></span><strong>Front door</strong><span class="muted small"> / Camera 01</span></div><span class="status-badge" id="camera-state">Checking camera</span></div>
+            <div class="camera-stage" id="camera-stage">
+              <img id="camera-image" alt="Latest locally captured front-door snapshot" hidden>
+              <svg id="motion-overlay" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" hidden><rect id="motion-rect" x="10" y="10" width="80" height="80"></rect></svg>
+              <div class="camera-placeholder" id="camera-placeholder"><div class="door-illustration" aria-hidden="true"><div class="door-arch"></div><div class="door-frame"><div class="door-window"></div><i></i></div><div class="door-step"></div><div class="plant plant-left">♧</div><div class="plant plant-right">♧</div></div><h2 id="camera-empty-title">A window to your doorstep</h2><p id="camera-empty-detail">Your camera preview will appear here.</p></div>
+              <div class="frame-overlay" id="frame-overlay" hidden><span><i></i> FRESH SNAPSHOTS</span><time id="frame-time">—</time></div>
+            </div>
+            <div class="camera-controls"><span id="camera-caption">No image captured yet</span><div><button id="snapshot" class="secondary-button">↻ <span>Snapshot</span></button><button id="preview-toggle" class="dark-button">▶ Start preview</button></div></div>
+          </section>
+          <section class="card latest-ring" id="latest-ring" aria-label="Latest ring">
+            <div class="card-top"><div><strong>Latest ring</strong></div><span class="status-badge" id="latest-ring-state">No ring yet</span></div>
+            <div id="latest-ring-body" class="latest-ring-body"></div>
+          </section>
+          </div>
+          <aside class="at-a-glance">
+            <section class="status-card card"><p class="eyebrow">AT A GLANCE</p><div class="device-health"><span class="health-orbit">✓</span><div><h2>On your network</h2><p>Local by design. Yours by default.</p></div></div><div class="status-line"><span>Camera</span><strong id="glance-camera">Checking</strong></div><div class="status-line"><span>Motion monitoring</span><strong id="glance-motion">Paused</strong></div><div class="status-line"><span>Person alerts</span><strong id="glance-presence">Off</strong></div><div class="status-line"><span>Quiet hours</span><strong id="glance-quiet">Off</strong></div><div class="status-line"><span>Person detection</span><strong id="glance-person">Not configured</strong></div><div class="status-line"><span>Local captions</span><strong id="glance-caption">Off</strong></div><button class="text-button settings-open">Manage your device <span>→</span></button></section>
+            <section class="today-card"><div class="today-card-top"><span>TODAY AT YOUR DOOR</span><span aria-hidden="true">↗</span></div><div class="today-count"><strong id="today-count">0</strong><span>moments<br>saved locally</span></div><div class="today-footer"><span id="ring-count">0 rings</span><i></i><span id="motion-count">0 motion events</span></div></section>
+          </aside>
+        </div>
+        <section class="activity-section"><div class="section-heading"><div><p class="eyebrow">THE LITTLE COMINGS & GOINGS</p><h2>Recent activity</h2></div><button class="text-button" data-view="history">View all activity <span>→</span></button></div><div id="recent-events" class="event-list"></div></section>
+        <div class="home-note"><span>◈</span><p>No cloud camera feed. No automatic sharing.<br><strong>Just your front door, kept close.</strong></p><span class="note-end">MADE FOR YOUR HOME</span></div>
+      </section>
+
+      <section id="view-history" class="view" hidden><div class="page-heading compact"><div><p class="eyebrow">A SMALL RECORD OF YOUR DAY</p><h1>At your door.</h1><p class="intro">Timestamped moments, stored only on this device.</p></div><span id="retention-badge" class="pill">7-day retention</span></div><div class="filter-row" role="group" aria-label="Filter activity"><button class="filter active" data-filter="all">All activity</button><button class="filter" data-filter="ring">Rings & tests</button><button class="filter" data-filter="motion">Motion</button></div><div id="all-events" class="event-list"></div><button id="load-more" class="secondary-button load-more" hidden>Load older activity</button></section>
+
+      <section id="view-people" class="view" hidden><div class="page-heading compact"><div><p class="eyebrow">THE PEOPLE WHO FEEL LIKE HOME</p><h1>Familiar faces.</h1><p class="intro">Add your people with their permission. Names, reference photos and face embeddings stay on this Pi.</p></div><button id="add-person" class="primary-button">＋ Add a person</button></div><ol class="people-steps" aria-label="Add people steps"><li><strong>1 · Name</strong><span>Create or edit a local profile.</span></li><li><strong>2 · Photos</strong><span>Choose clear photos of just that person.</span></li><li><strong>3 · Test</strong><span>Try another photo, only when you choose.</span></li></ol><div class="feature-note"><span>◎</span><div><strong>You’re in control of every label.</strong><p>Enroll up to five chosen photos per person. A miss stays unknown.</p></div></div><details class="setup-guide" id="recognition-model"><summary>Recognition model</summary><p id="face-model-state" class="feature-note small-note">Checking local recognition models…</p></details><div class="people-toolbar"><button id="recognition-open" class="secondary-button" disabled>Test recognition</button><p class="muted small">Choose another photo to test locally. No camera capture or Bot message.</p></div><div id="people-list" class="people-grid"></div></section>
+
+      <section id="view-agent" class="view" hidden>
+        <div class="page-heading compact"><div><p class="eyebrow">ONE-TIME VISITS</p><h1>Guest approval.</h1><p class="intro">Review a visitor pass before anyone is let through. No physical lock is connected.</p></div></div>
+        <section class="card bot-panel access-panel" aria-label="Access simulation">
+          <p class="eyebrow">SIMULATION ONLY</p>
+          <h2>Try a visitor pass.</h2>
+          <p>No physical lock is connected. A simulated open stays on this page.</p>
+          <div class="access-forms access-forms-single">
+            <form id="access-pass-form">
+              <h3>Authorize a visit in advance</h3>
+              <label for="access-visitor-name">Temporary visitor name</label>
+              <input id="access-visitor-name" maxlength="60" required autocomplete="off">
+              <label for="access-reference-count">Pretend reference photos</label>
+              <input id="access-reference-count" type="number" min="1" max="5" value="5" required>
+              <p class="muted small">Placeholder count only. No photos are uploaded or enrolled, and Familiar people stay separate.</p>
+              <label for="access-valid-from">Visit window starts</label>
+              <input id="access-valid-from" type="datetime-local" required>
+              <label for="access-valid-until">Visit window ends</label>
+              <input id="access-valid-until" type="datetime-local" required>
+              <p class="muted small">One use, at most 24 hours, starting within seven days. Approve the pass now; a valid arrival does not ask you again.</p>
+              <button class="secondary-button" type="submit">Review simulated visitor pass</button>
+            </form>
+          </div>
+          <p id="access-error" class="inline-error" role="alert"></p>
+          <h3>Guests</h3>
+          <p class="muted small">A probable match is not identity. The visit window is the only time that match can use a simulated pass.</p>
+          <div id="guest-window-list" class="access-list"></div>
+          <h3>Active guest PINs</h3>
+          <p class="muted small">Label and expiry only. The PIN is shown once when it is issued, then never again.</p>
+          <div id="guest-pin-list" class="access-list"></div>
+          <p class="muted small"><a href="/pin">Open the visitor keypad</a></p>
+          <h3>Door guest approval</h3>
+          <p class="muted small">A probable guest match waits here for an owner decision. Waiting is not a completed result.</p>
+          <div id="guest-approval-list" class="access-list"></div>
+          <div id="access-pass-list" class="access-list"></div>
+          <details class="setup-guide" id="lock-commands">
+            <summary>Simulated lock commands</summary>
+            <p id="access-lock-state" class="local-feedback" role="status">Checking the simulator…</p>
+            <form id="access-command-form">
+              <h3>One command</h3>
+              <label for="access-command">Simulated command</label>
+              <select id="access-command"><option value="unlock">Unlock</option><option value="lock">Lock</option><option value="open">Open · separate capability, unavailable here</option></select>
+              <p class="muted small">Unlocking does not physically open a door. You review the exact command before simulation.</p>
+              <button class="secondary-button" type="submit">Propose simulated command</button>
+            </form>
+            <div id="access-command-list" class="access-list"></div>
+          </details>
+          <details class="setup-guide" id="bridge-panel">
+            <summary>Try a five-photo proposal</summary>
+            <p class="muted small">Uses the visitor name and time window above. Five generated demo images become temporary references after one mock approval.</p>
+            <button id="bridge-fixture-create" class="secondary-button" type="button">Create five-photo demo proposal</button>
+            <p id="bridge-status" class="muted small">Real photo bridge awaits owner setup.</p>
+            <div id="bridge-proposal-list" class="access-list"></div>
+          </details>
+          <details class="setup-guide">
+            <summary>Simulation audit</summary>
+            <div id="access-audit" class="muted small"></div>
+          </details>
+        </section>
+        <details class="setup-guide advanced-panel" id="bot-tools">
+          <summary>Connect your bot</summary>
+          <section class="card bot-panel">
+            <div class="section-heading"><div><p class="eyebrow">YOUR BOT, ITS MEMORY</p><h2>Connect your bot.</h2></div><span id="bot-state" class="pill">Not connected</span></div>
+            <p class="muted">A ring can wake your personal bot immediately with text. Local recognition sends a later text update with the same event ID. Each stage may start a Bot run. Optional image sharing sends one small photo with the analysis update.</p>
+            <form id="bot-form">
+              <label for="bot-provider">Personal bot</label>
+              <select id="bot-provider"><option value="grok">Grok Bot · xAI / Cursor</option><option value="hermes">Hermes Agent</option><option value="dot">Dot · direct trigger not verified</option><option value="muse">Muse · product/API pending</option></select>
+              <p id="bot-detail" class="muted small"></p>
+              <div id="bot-fields">
+                <label for="bot-endpoint">Bot endpoint</label>
+                <input id="bot-endpoint" type="url" maxlength="600" placeholder="Paste the routine POST URL from your Bot" autocomplete="off">
+                <div id="hermes-fields" hidden><label for="bot-session">Existing Hermes session ID</label><input id="bot-session" maxlength="200" placeholder="An existing active session, not a new invented ID"><label for="bot-memory">Existing memory scope (optional)</label><input id="bot-memory" maxlength="256" placeholder="Verified X-Hermes-Session-Key"></div>
+                <label for="bot-destination">Destination label</label>
+                <input id="bot-destination" maxlength="120" placeholder="e.g. My Main Bot / Doorbell routine">
+                <p id="bot-delivery" class="muted small"></p>
+                <p id="bot-key-state" class="feature-note small-note">The bearer key must be stored locally on the Pi.</p>
+                <details class="setup-guide"><summary>Secure setup instructions</summary><p id="bot-setup" class="muted small"></p><p class="muted small">Store the key in <code>~/.config/agent-doorbell/environment</code> on the Pi, then restart only the doorbell service. Never paste a key into this page or chat. Saving the form makes no network request to your bot.</p></details>
+                <label class="check-row"><input id="bot-images" type="checkbox" disabled> Send one camera image per ring to this Grok Bot</label>
+                <p id="bot-image-state" class="muted small">Images off.</p>
+                <p class="muted small">Images may show visitors and faces. All Bots on your Grok account share cloud files. Local deletion does not erase chat, tool records or backups. Face embeddings and enrollment photos remain local.</p>
+                <label class="check-row"><input id="bot-enabled" type="checkbox"> Send future rings to this bot</label>
+                <p class="muted small">Enabling needs a successful synthetic test and your destination confirmation. The Overview test stays local. Use Test ring with paired bot to confirm a test with camera analysis; zone motion stays local. A person present long enough can send one unverified motion webhook.</p>
+                <div class="bot-actions"><button type="submit" class="primary-button">Save bot setup</button><button id="bot-test" type="button" class="secondary-button" disabled>Send synthetic test</button><button id="bot-image-test" type="button" class="secondary-button" disabled>Send generated image test</button><button id="bot-confirm" type="button" class="secondary-button" disabled>Confirm test at destination</button><button id="bot-ring-test" type="button" class="secondary-button" disabled>Test ring with paired bot</button></div>
+                <p class="muted small">The synthetic test sends no photo or visitor data. Your bot may use its existing tools and usage allowance.</p>
+              </div>
+            </form>
+            <p class="bot-boundary">Images: off · Device tool grants: off · Replies: human approval</p>
+            <p id="bot-connection-state" class="pill">No personal bot connected</p>
+          </section>
+          <section class="bot-history"><div class="section-heading"><h2>Bot delivery history</h2><span class="muted small">Accepted is not completed</span></div><div id="bot-deliveries"></div></section>
+        </details>
+        <details class="setup-guide advanced-panel" id="local-replies">
+          <summary>Local replies</summary>
+          <div class="agent-grid">
+            <section class="card agent-card"><span class="agent-symbol">✳</span><h2>Ready when your agent is.</h2><p>Your personal bot keeps its own tools and context. The local history API exposes updated events; any proposed spoken reply stays in your approval inbox.</p><button id="adapter-context" class="secondary-button">Preview local context ↗</button><div class="agent-constraint">✓ No door unlocking <span>✓ Replies need approval</span></div></section>
+            <section class="card draft-card"><p class="eyebrow">TRY THE APPROVAL FLOW</p><h2>Leave a kind word.</h2><form id="reply-form"><label for="reply-text">Local reply draft</label><textarea id="reply-text" maxlength="500" rows="3" placeholder="Thanks for stopping by. Please leave the parcel by the door." required></textarea><p class="muted small">Approval can speak on this browser only. Nothing is sent to a visitor or outside your network.</p><button class="primary-button" type="submit">Create reply draft →</button></form></section>
+          </div>
+          <div class="section-heading"><h2>Reply inbox</h2><span class="muted small">Every reply waits for you</span></div>
+          <div id="proposal-list"></div>
+        </details>
+      </section>
+
+      <footer><span><i class="tiny-dot"></i> Built for a quieter kind of connected home.</span><span>LOCAL FIRST / ALWAYS YOURS</span></footer>
+    </main>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+  <dialog id="event-dialog"><div class="dialog-heading"><div><p class="eyebrow">A MOMENT AT YOUR DOOR</p><h2 id="event-title">Doorbell event</h2></div><button class="close-button" data-close="event-dialog" aria-label="Close event">×</button></div><div id="event-media" class="event-media"></div><div class="event-meta" id="event-meta"></div><form id="event-form"><label for="event-person">Who was here?</label><select id="event-person"><option value="unknown">Unknown</option><option value="uncertain">Uncertain</option></select><p class="muted small">Your correction is a manual label, not an automated identity match.</p><label for="event-note">A note for later</label><textarea id="event-note" rows="2" maxlength="500" placeholder="Optional note"></textarea><div class="dialog-actions"><button id="delete-event" class="danger-button" type="button">Delete event</button><button class="primary-button" type="submit">Save & mark reviewed</button></div></form></dialog>
+
+  <dialog id="settings-dialog"><div class="dialog-heading"><div><p class="eyebrow">JUST THE WAY YOU LIKE IT</p><h2>Device settings</h2></div><button class="close-button" data-close="settings-dialog" aria-label="Close settings">×</button></div><form id="settings-form"><label class="switch-row" for="motion-enabled"><span><strong>Motion monitoring</strong><small>Capture movement in your chosen zone.</small></span><input type="checkbox" id="motion-enabled" role="switch"></label><div class="setting-columns"><div><label for="motion-threshold">Motion sensitivity</label><input type="range" id="motion-threshold" min="1" max="100" step="1"><p class="muted small">Higher sensitivity notices smaller changes.</p></div><div><label for="cooldown">Time between motion events</label><select id="cooldown"><option value="5">5 seconds</option><option value="10">10 seconds</option><option value="20">20 seconds</option><option value="30">30 seconds</option><option value="60">1 minute</option><option value="120">2 minutes</option><option value="300">5 minutes</option></select></div></div><label>Motion zone <span class="muted small">Drag a rectangle, or adjust the percentages.</span></label><div id="zone-editor" class="zone-editor" role="group" aria-label="Motion zone editor"><img id="zone-image" alt="Camera frame for choosing motion zone" hidden><svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><rect id="zone-rect" x="10" y="10" width="80" height="80"></rect></svg><span id="zone-hint">Drag to choose an area</span></div><div class="zone-fields"><label>Left %<input id="zone-x" type="number" min="0" max="95" required></label><label>Top %<input id="zone-y" type="number" min="0" max="95" required></label><label>Width %<input id="zone-width" type="number" min="5" max="100" required></label><label>Height %<input id="zone-height" type="number" min="5" max="100" required></label></div><label class="switch-row" for="person-alerts-enabled"><span><strong>Person presence alerts</strong><small>After someone stays in view, save a snapshot and send one unverified motion webhook. Not a ring, not identity, not certain.</small></span><input type="checkbox" id="person-alerts-enabled" role="switch"></label><label for="person-alert-seconds">Seconds in view before that alert</label><input id="person-alert-seconds" type="number" min="1" max="300" step="1" required><p class="muted small">Repeats wait five minutes unless you change the cooldown below.</p><label for="person-alert-cooldown">Minutes between presence alerts</label><input id="person-alert-cooldown" type="number" min="1" max="60" step="1" required><label class="switch-row" for="quiet-hours-enabled"><span><strong>Quiet hours</strong><small>Rings and motion stay on this device. Webhooks wait, unless there is a probable known-face match.</small></span><input type="checkbox" id="quiet-hours-enabled" role="switch"></label><div class="setting-columns"><div><label for="quiet-start">Quiet hours start</label><input id="quiet-start" type="time" step="60" required></div><div><label for="quiet-end">Quiet hours end</label><input id="quiet-end" type="time" step="60" required></div></div><label for="summary-enabled" class="switch-row"><span><strong>Daily count summary</strong><small>One webhook of counts only. No names or images.</small></span><input type="checkbox" id="summary-enabled" role="switch"></label><label for="summary-time">Daily summary time</label><input id="summary-time" type="time" step="60" required><label for="timezone">Local timezone</label><input id="timezone" type="text" maxlength="64" required autocomplete="off"><p class="muted small">Default Asia/Kolkata. Quiet hours and the summary use this clock.</p><label for="retention">Keep local history for</label><select id="retention"><option value="1">1 day</option><option value="3">3 days</option><option value="7">7 days</option><option value="14">14 days</option><option value="30">30 days</option></select><p class="muted small">Older events and their images are removed automatically. Up to 500 events are retained.</p><div class="feature-note small-note"><span>↔</span><p>The existing local session gets camera priority. Captures wait while its API reports an active session; another app’s camera process is never stopped.</p></div><div id="settings-error" class="inline-error" role="alert"></div><div class="dialog-actions"><button class="secondary-button" type="button" data-close="settings-dialog">Cancel</button><button class="primary-button" type="submit">Save settings</button></div></form></dialog>
+
+  <dialog id="person-dialog" class="people-dialog"><div class="dialog-heading"><div><p class="eyebrow">ADD PEOPLE · 1 OF 3 · NAME</p><h2 id="person-title">Add a person</h2></div><button class="close-button" data-close="person-dialog" aria-label="Close person form">×</button></div><form id="person-form"><label for="person-name">Name</label><input id="person-name" maxlength="60" placeholder="A name you know" autocomplete="off" required><label for="person-note">A note <span class="muted">(optional)</span></label><input id="person-note" maxlength="240" placeholder="Family, friend, neighbour…"><p class="muted small">Saved on this Pi. Next, choose photos with the person's permission. A name alone is a manual label, not face enrollment.</p><p id="person-error" class="inline-error" role="alert"></p><div class="dialog-actions"><button class="secondary-button" type="button" data-close="person-dialog">Cancel</button><button id="person-next" class="primary-button" type="submit">Save & choose photos →</button></div></form></dialog>
+  <dialog id="context-dialog"><div class="dialog-heading"><h2>Local agent context</h2><button class="close-button" data-close="context-dialog" aria-label="Close context">×</button></div><p class="muted">This is the adapter response on your local device. No external agent has received it.</p><pre id="context-output"></pre></dialog>
+<dialog id="enroll-dialog" class="people-dialog"><div class="dialog-heading"><div><p class="eyebrow">ADD PEOPLE · 2 OF 3 · REFERENCE PHOTOS</p><h2 id="enroll-title">Enroll a photo</h2></div><button class="close-button" data-close="enroll-dialog" aria-label="Close enrollment">×</button></div><form id="enroll-form"><p id="enroll-count" class="muted small" aria-live="polite"></p><label for="enroll-photo">Choose a clear photo of one person</label><input id="enroll-photo" type="file" accept="image/jpeg,image/png" required><p class="muted small">On iPhone, choose Photo Library from the file picker. JPEG/PNG only, under 8 MB. For HEIC, export as JPEG/PNG or use a cropped screenshot.</p><p class="muted small">Use a sharp, well-lit, front-facing face with nobody else in the photo. Add a few different angles or lighting conditions, one photo at a time.</p><figure id="enroll-preview" class="chosen-photo" hidden><img id="enroll-preview-image" alt="Reference photo you chose, before enrollment"><figcaption id="enroll-preview-name"></figcaption></figure><p class="muted small">Photos and embeddings stay on the Pi. Delete enrolled photos to remove both. Closing after saving a photo keeps it enrolled.</p><p id="enroll-error" class="inline-error" role="alert"></p><div id="enroll-feedback" class="local-feedback" role="status" aria-live="polite" hidden></div><div class="dialog-actions"><button id="enroll-save" class="primary-button" type="submit">Enroll locally</button><button id="enroll-next" class="secondary-button" type="button" disabled>Test recognition →</button></div><div class="dialog-actions flow-navigation"><button id="enroll-back" class="text-button" type="button">← Back to name</button><button class="secondary-button" type="button" data-close="enroll-dialog">Done</button></div></form></dialog>
+<dialog id="recognition-dialog" class="people-dialog"><div class="dialog-heading"><div><p class="eyebrow">ADD PEOPLE · 3 OF 3 · LOCAL TEST</p><h2>Test recognition</h2></div><button class="close-button" data-close="recognition-dialog" aria-label="Close recognition test">×</button></div><form id="recognition-form"><p id="recognition-target" class="muted small"></p><label for="recognition-photo">Choose a different photo to test</label><input id="recognition-photo" type="file" accept="image/jpeg,image/png" required><p class="muted small">Use a photo you did not enroll. On iPhone, choose Photo Library. JPEG/PNG under 8 MB; export HEIC as JPEG/PNG or use a cropped screenshot.</p><figure id="recognition-preview" class="chosen-photo" hidden><img id="recognition-preview-image" alt="Photo you chose for a local recognition test"><figcaption id="recognition-preview-name"></figcaption></figure><p class="muted small">The test photo is not saved. No camera capture or Bot message.</p><p id="recognition-error" class="inline-error" role="alert"></p><div id="recognition-result" class="local-feedback" role="status" aria-live="polite" hidden></div><div class="dialog-actions"><button id="recognition-back" class="text-button" type="button">← Back to photos</button><button id="recognition-run" class="primary-button" type="submit">Run local test</button></div><div class="dialog-actions flow-navigation"><button class="secondary-button" type="button" data-close="recognition-dialog">Done</button></div></form></dialog>
+<dialog id="access-arrival-dialog" class="people-dialog"><div class="dialog-heading"><div><p class="eyebrow">SIMULATION ONLY · ONE-TIME VISIT</p><h2>Simulate an arrival</h2></div><button class="close-button" data-close="access-arrival-dialog" aria-label="Close arrival simulation">×</button></div><p id="access-arrival-person"></p><p class="muted small">The advance simulated owner approval is already recorded. No repeat owner approval at arrival. A matching face and a verified visitor credential are both required in this pretend test.</p><form id="access-arrival-form"><label for="access-arrival-face">Pretend face result</label><select id="access-arrival-face"><option value="probable_match">Matches this visitor</option><option value="unknown">Unknown visitor</option><option value="uncertain">Uncertain match</option><option value="multiple_faces">Multiple faces</option><option value="no_face">No face</option><option value="low_quality">Face too small or blurry</option></select><label class="check-row"><input id="access-arrival-factor" type="checkbox"> Pretend a visitor credential was verified. No PIN or credential is generated.</label><p id="access-arrival-result" class="local-feedback" role="status" hidden></p><div class="dialog-actions"><button class="secondary-button" type="button" data-close="access-arrival-dialog">Cancel</button><button id="access-arrival-run" class="primary-button" type="submit">Simulate arrival</button></div></form></dialog>
+</body></html>

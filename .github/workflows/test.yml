@@ -1,0 +1,45 @@
+name: Test local doorbell
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - run: bash scripts/test.sh backend
+  browser:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: bash scripts/test.sh browser
+  leak_check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - run: python scripts/leak-check.py
+  restricted_ssh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - run: python -m venv .venv && .venv/bin/python -m pip install -e '.[test]'
+      - run: sudo apt-get update && sudo apt-get install -y --no-install-recommends openssh-server
+      - run: sudo --preserve-env=GITHUB_ACTIONS,RUNNER_ENVIRONMENT,DOORBELL_RESTRICTED_SSH_FIXTURE .venv/bin/python scripts/qa-restricted-ssh.py
+        env:
+          DOORBELL_RESTRICTED_SSH_FIXTURE: '1'

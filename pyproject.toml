@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=75"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "agent-doorbell"
+version = "0.3.16"
+description = "A local-first Raspberry Pi doorbell"
+requires-python = ">=3.11"
+dependencies = ["fastapi==0.142.2", "uvicorn==0.54.0", "Pillow==12.3.0"]
+
+[project.optional-dependencies]
+test = ["pytest==9.1.1", "httpx==0.28.1"]
+person = ["opencv-python-headless>=4.10,<5"]
+gpio = ["gpiozero>=2,<3"]
+
+[project.scripts]
+agent-doorbell = "agent_doorbell.__main__:main"
+
+[tool.setuptools.package-data]
+agent_doorbell = ["static/*", "vendor/*.txt"]
+
+[tool.setuptools.packages.find]
+include = ["agent_doorbell*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
