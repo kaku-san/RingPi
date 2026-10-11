@@ -103,6 +103,43 @@ def test_button_unit_requires_configured_pin():
     assert "--pin" not in unit and not re.search(r"DOORBELL_BUTTON_BCM=\d", unit)
 
 
+def test_launch_readme_order_and_art():
+    from PIL import Image
+
+    text = (ROOT / "README.md").read_text()
+    hero = text.index("assets/hero.gif")
+    hook = text.index("Your doorbell, run by Grok. Local face recognition on a Raspberry Pi 5.")
+    flow = text.index("assets/flow.png")
+    features = text.index("## Features")
+    models = text.index("## Local models")
+    parts = text.index("## Parts")
+    quick = text.index("## Quickstart")
+    road = text.index("## Roadmap")
+    mark = text.index("Grok is a trademark of xAI; not affiliated.")
+    badge = text.index("https://github.com/kaku-san/RingPi/actions/workflows/test.yml/badge.svg")
+    assert hero < hook < flow < features < models < parts < quick < road < mark < badge
+    assert "scripts/setup.sh" in text
+    assert "examples/grok-bot-routine.md" in text
+    assert "deploy/cloudflare-queue/" in text
+    assert "QUEUE_KEY" in text and "named `Q`" in text
+    assert "YuNet" in text and "SFace" in text and "SmolVLM-256M" in text
+    assert "Qwen 2.5 1.5B Instruct (local text model, llama.cpp)" in text
+    assert "TODO" in text
+    low = text.lower()
+    for banned in ("grifttalk", "workers.dev", "vasavi", "kakuji"):
+        assert banned not in low
+    assert (ROOT / "assets/HERO.txt").is_file()
+    assert (ROOT / "assets/flow.mmd").is_file()
+    assert (ROOT / "LICENSE").is_file()
+    assert (ROOT / "CONTRIBUTING.md").is_file()
+    assert (ROOT / ".github/ISSUE_TEMPLATE/bug.md").is_file()
+    assert (ROOT / ".github/ISSUE_TEMPLATE/feature.md").is_file()
+    assert Image.open(ROOT / "assets/social-preview.png").size == (1280, 640)
+    flow_image = Image.open(ROOT / "assets/flow.png")
+    assert flow_image.size[0] >= 1000 and flow_image.size[1] >= 600
+    assert not (ROOT / "assets/hero.gif").exists()
+
+
 def test_leak_check_accepts_this_tree_and_rejects_samples():
     subprocess.run([sys.executable, str(ROOT / "scripts/leak-check.py"), "--self-test"], check=True, cwd=ROOT)
     subprocess.run([sys.executable, str(ROOT / "scripts/leak-check.py")], check=True, cwd=ROOT)

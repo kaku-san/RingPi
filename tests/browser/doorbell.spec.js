@@ -407,6 +407,20 @@ test('iPhone-sized enrollment supports preview, cancel, format guidance and loca
 test('event details show positive objects and useful face quality without absent animals', async ({page,request})=>{
   const status=await (await request.get('/api/status')).json();
   status.local_vision={...status.local_vision,objects_available:true};
+  await page.addInitScript(() => {
+    const Real = window.EventSource;
+    function QuietStatusSource(url, options) {
+      const source = new Real(url, options);
+      const add = source.addEventListener.bind(source);
+      source.addEventListener = (type, listener, listenOptions) => {
+        if (type === "status") return;
+        return add(type, listener, listenOptions);
+      };
+      return source;
+    }
+    QuietStatusSource.prototype = Real.prototype;
+    window.EventSource = QuietStatusSource;
+  });
   const fixture={id:'object-observation-fixture',occurred_at:'2026-10-07T02:50:00+00:00',
     kind:'test',source:'browser',capture_status:'complete',frames:0,media:[],note:'',simulated:true,
     person_id:null,person_status:'detected',face_status:'low_quality',acknowledged:false,

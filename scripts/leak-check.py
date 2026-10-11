@@ -2,6 +2,7 @@
 """Fail the tracked tree on obvious secrets and personal-data patterns.
 
 Hostnames use a generic mDNS-suffix rule. Do not add a specific machine name here.
+Two generated diagrams are allowlisted. Every other image, database, and weight still fails.
 """
 import re
 import subprocess
@@ -9,6 +10,11 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+# Drawn locally for the launch README. Not photos, and not a general image exception.
+ALLOWED_GENERATED_ASSETS = frozenset({
+    "assets/flow.png",
+    "assets/social-preview.png",
+})
 FORBIDDEN_SUFFIXES = {
     ".jpg", ".jpeg", ".png", ".webp", ".gif", ".sqlite", ".sqlite3", ".db",
     ".onnx", ".gguf", ".pt", ".tflite", ".pem", ".npy", ".npz", ".weights",
@@ -79,6 +85,8 @@ def scan_tree():
     for path in tracked_files():
         if not path.is_file():
             continue
+        if path.relative_to(ROOT).as_posix() in ALLOWED_GENERATED_ASSETS:
+            continue
         data = path.read_bytes()
         if b"\0" in data:
             problems.append(f"{path.relative_to(ROOT)}:1: binary tracked file")
@@ -97,7 +105,14 @@ def self_test():
     assert findings_in(Path("sample.txt"), host + "\n")
     assert findings_in(Path("sample.txt"), key)
     assert findings_in(Path("sample.txt"), token_line)
+    assert ALLOWED_GENERATED_ASSETS == frozenset({
+        "assets/flow.png",
+        "assets/social-preview.png",
+    })
     assert findings_in(Path("photo.jpg"), "x")
+    assert findings_in(Path("photo.png"), "x")
+    assert findings_in(Path("assets/flow.png"), "x")
+    assert findings_in(Path("clip.gif"), "x")
     assert not findings_in(Path("readme.md"), clean)
     assert not findings_in(Path("note.md"), "DOORBELL_GROK_ROUTINE_KEY=\"PASTE_ONLY_THE_KEY_HERE\"\n")
     assert not findings_in(Path("note.md"), "https://example.com/work#ask-for-reviewable-results\n")

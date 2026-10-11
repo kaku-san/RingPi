@@ -16,6 +16,8 @@ faces/
 *.jpg
 *.jpeg
 *.png
+!assets/flow.png
+!assets/social-preview.png
 *.webp
 *.mp4
 *.gguf

@@ -1,0 +1,12 @@
+flowchart LR
+  ring["Button or dashboard ring"] --> photo[Photo]
+  photo --> match["Local face match"]
+  match --> visit["One visit message"]
+  visit --> grok[Grok]
+  grok --> guest["Add a guest: photo + time window"]
+  grok --> pin["One-time PIN"]
+  grok --> revoke[Revoke]
+  guest --> queue[Queue]
+  pin --> queue
+  revoke --> queue
+  queue -->|"Pi polls outbound"| pi[Pi]
