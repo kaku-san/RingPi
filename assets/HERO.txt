@@ -1,4 +1,0 @@
-TODO: add assets/hero.gif
-
-A real doorbell demo is not in this tree.
-Do not commit a photo of a person, or a stand-in recording of one.

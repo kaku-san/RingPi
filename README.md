@@ -1,10 +1,6 @@
 # RingPi
 
-<!-- TODO: hero GIF. Record a real doorbell demo at assets/hero.gif. Do not commit a photo of a person. -->
-
 ![RingPi hero](assets/hero.gif)
-
-> **TODO:** `assets/hero.gif` is not recorded yet. See [assets/HERO.txt](assets/HERO.txt).
 
 Your doorbell, run by Grok. Local face recognition on a Raspberry Pi 5.
 

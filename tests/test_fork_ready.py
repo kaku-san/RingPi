@@ -124,11 +124,11 @@ def test_launch_readme_order_and_art():
     assert "QUEUE_KEY" in text and "named `Q`" in text
     assert "YuNet" in text and "SFace" in text and "SmolVLM-256M" in text
     assert "Qwen 2.5 1.5B Instruct (local text model, llama.cpp)" in text
-    assert "TODO" in text
+    assert "TODO" not in text
     low = text.lower()
     for banned in ("grifttalk", "workers.dev", "vasavi", "kakuji"):
         assert banned not in low
-    assert (ROOT / "assets/HERO.txt").is_file()
+    assert not (ROOT / "assets/HERO.txt").exists()
     assert (ROOT / "assets/flow.mmd").is_file()
     assert (ROOT / "LICENSE").is_file()
     assert (ROOT / "CONTRIBUTING.md").is_file()
@@ -137,7 +137,18 @@ def test_launch_readme_order_and_art():
     assert Image.open(ROOT / "assets/social-preview.png").size == (1280, 640)
     flow_image = Image.open(ROOT / "assets/flow.png")
     assert flow_image.size[0] >= 1000 and flow_image.size[1] >= 600
-    assert not (ROOT / "assets/hero.gif").exists()
+    hero_gif = Image.open(ROOT / "assets/hero.gif")
+    assert hero_gif.format == "GIF"
+    assert hero_gif.size[0] >= 800 and hero_gif.size[1] >= 450
+    duration = 0
+    for index in range(hero_gif.n_frames):
+        hero_gif.seek(index)
+        duration += hero_gif.info.get("duration", 0)
+    assert hero_gif.n_frames >= 8
+    assert 8000 <= duration <= 12000
+    assert (ROOT / "assets/hero.gif").stat().st_size < 5_000_000
+    assert (ROOT / "assets/hero.mp4").is_file()
+    assert (ROOT / "assets/hero.mp4").stat().st_size < 8_000_000
 
 
 def test_leak_check_accepts_this_tree_and_rejects_samples():

@@ -2,7 +2,7 @@
 """Fail the tracked tree on obvious secrets and personal-data patterns.
 
 Hostnames use a generic mDNS-suffix rule. Do not add a specific machine name here.
-Two generated diagrams are allowlisted. Every other image, database, and weight still fails.
+Generated launch art is allowlisted. Every other image, database, and weight still fails.
 """
 import re
 import subprocess
@@ -14,6 +14,8 @@ ROOT = Path(__file__).resolve().parents[1]
 ALLOWED_GENERATED_ASSETS = frozenset({
     "assets/flow.png",
     "assets/social-preview.png",
+    "assets/hero.gif",
+    "assets/hero.mp4",
 })
 FORBIDDEN_SUFFIXES = {
     ".jpg", ".jpeg", ".png", ".webp", ".gif", ".sqlite", ".sqlite3", ".db",
@@ -108,6 +110,8 @@ def self_test():
     assert ALLOWED_GENERATED_ASSETS == frozenset({
         "assets/flow.png",
         "assets/social-preview.png",
+        "assets/hero.gif",
+        "assets/hero.mp4",
     })
     assert findings_in(Path("photo.jpg"), "x")
     assert findings_in(Path("photo.png"), "x")

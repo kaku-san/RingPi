@@ -20,6 +20,7 @@ faces/
 !assets/social-preview.png
 *.webp
 *.mp4
+!assets/hero.mp4
 *.gguf
 *.onnx
 *.tflite
