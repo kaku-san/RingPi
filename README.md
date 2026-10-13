@@ -6,7 +6,11 @@ Your doorbell, run by Grok. Local face recognition on a Raspberry Pi 5.
 
 ## How a ring moves
 
-![Button or dashboard ring, photo, local face match, one visit message to Grok](assets/flow.png)
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/flow-dark.png">
+  <source media="(prefers-color-scheme: light)" srcset="assets/flow.png">
+  <img alt="Button or dashboard, photo, local face match on the Pi, one message to Grok. Add guest, one-time PIN, and revoke go back to the Pi through an outbound poll." src="assets/flow.png" width="960">
+</picture>
 
 Source for that picture: [assets/flow.mmd](assets/flow.mmd).
 
@@ -37,6 +41,17 @@ Weights stay out of git. Install them with `scripts/install-local-models.py` and
 - Optional normally-open button on one free BCM GPIO
 
 Leave BCM 8, 10, 11, 17, 24, and 25 unwired. The existing screen-adapter wiring uses them. No pin is chosen for you.
+
+## What you can connect
+
+Not built yet. Roadmap only. Unlock is simulated in the current prototype.
+
+- Door lock: a 5V relay and a 12V solenoid, or an SG90 servo latch for prototypes
+- GPIO LED unlock indicator
+- Extra cameras
+- PIR motion sensor and a door-contact sensor
+- Speaker or chime
+- Smart plugs and home automation
 
 ## Quickstart
 

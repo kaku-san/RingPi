@@ -17,6 +17,7 @@ faces/
 *.jpeg
 *.png
 !assets/flow.png
+!assets/flow-dark.png
 !assets/social-preview.png
 *.webp
 *.mp4

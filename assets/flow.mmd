@@ -1,12 +1,15 @@
+%%{init: {"theme":"base","themeVariables":{"fontSize":"22px","fontFamily":"arial, sans-serif","primaryColor":"#ffffff","primaryTextColor":"#24292f","primaryBorderColor":"#24292f","lineColor":"#e76113","background":"transparent"},"flowchart":{"nodeSpacing":40,"rankSpacing":56,"padding":18,"htmlLabels":false,"curve":"basis"}}}%%
 flowchart LR
-  ring["Button or dashboard ring"] --> photo[Photo]
-  photo --> match["Local face match"]
-  match --> visit["One visit message"]
-  visit --> grok[Grok]
-  grok --> guest["Add a guest: photo + time window"]
+  btn["Button / dashboard"] --> photo[Photo]
+  photo --> match["Local face match on Pi"]
+  match --> msg["One message"]
+  msg --> grok[Grok]
+  grok --> guest["Add guest"]
   grok --> pin["One-time PIN"]
   grok --> revoke[Revoke]
-  guest --> queue[Queue]
-  pin --> queue
-  revoke --> queue
-  queue -->|"Pi polls outbound"| pi[Pi]
+  guest --> poll["Outbound poll"]
+  pin --> poll
+  revoke --> poll
+  poll --> pi[Pi]
+  classDef accent fill:#e76113,stroke:#c24e0c,color:#ffffff
+  class grok accent

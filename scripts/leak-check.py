@@ -13,6 +13,7 @@ ROOT = Path(__file__).resolve().parents[1]
 # Drawn locally for the launch README. Not photos, and not a general image exception.
 ALLOWED_GENERATED_ASSETS = frozenset({
     "assets/flow.png",
+    "assets/flow-dark.png",
     "assets/social-preview.png",
     "assets/hero.gif",
     "assets/hero.mp4",
@@ -109,6 +110,7 @@ def self_test():
     assert findings_in(Path("sample.txt"), token_line)
     assert ALLOWED_GENERATED_ASSETS == frozenset({
         "assets/flow.png",
+        "assets/flow-dark.png",
         "assets/social-preview.png",
         "assets/hero.gif",
         "assets/hero.mp4",

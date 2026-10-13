@@ -113,11 +113,16 @@ def test_launch_readme_order_and_art():
     features = text.index("## Features")
     models = text.index("## Local models")
     parts = text.index("## Parts")
+    connect = text.index("## What you can connect")
     quick = text.index("## Quickstart")
     road = text.index("## Roadmap")
     mark = text.index("Grok is a trademark of xAI; not affiliated.")
     badge = text.index("https://github.com/kaku-san/RingPi/actions/workflows/test.yml/badge.svg")
-    assert hero < hook < flow < features < models < parts < quick < road < mark < badge
+    assert hero < hook < flow < features < models < parts < connect < quick < road < mark < badge
+    assert "Not built yet. Roadmap only." in text
+    assert "Unlock is simulated in the current prototype." in text
+    assert "assets/flow-dark.png" in text
+    assert "prefers-color-scheme: dark" in text
     assert "scripts/setup.sh" in text
     assert "examples/grok-bot-routine.md" in text
     assert "deploy/cloudflare-queue/" in text
@@ -136,7 +141,12 @@ def test_launch_readme_order_and_art():
     assert (ROOT / ".github/ISSUE_TEMPLATE/feature.md").is_file()
     assert Image.open(ROOT / "assets/social-preview.png").size == (1280, 640)
     flow_image = Image.open(ROOT / "assets/flow.png")
+    dark_flow = Image.open(ROOT / "assets/flow-dark.png")
     assert flow_image.size[0] >= 1000 and flow_image.size[1] >= 600
+    assert dark_flow.size == flow_image.size
+    assert flow_image.mode == "RGBA" and dark_flow.mode == "RGBA"
+    assert flow_image.getpixel((0, 0))[3] == 0
+    assert dark_flow.getpixel((0, 0))[3] == 0
     hero_gif = Image.open(ROOT / "assets/hero.gif")
     assert hero_gif.format == "GIF"
     assert hero_gif.size[0] >= 800 and hero_gif.size[1] >= 450
