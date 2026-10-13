@@ -15,8 +15,7 @@ ALLOWED_GENERATED_ASSETS = frozenset({
     "assets/flow.png",
     "assets/flow-dark.png",
     "assets/social-preview.png",
-    "assets/hero.gif",
-    "assets/hero.mp4",
+    "assets/hero.jpg",
 })
 FORBIDDEN_SUFFIXES = {
     ".jpg", ".jpeg", ".png", ".webp", ".gif", ".sqlite", ".sqlite3", ".db",
@@ -112,8 +111,7 @@ def self_test():
         "assets/flow.png",
         "assets/flow-dark.png",
         "assets/social-preview.png",
-        "assets/hero.gif",
-        "assets/hero.mp4",
+        "assets/hero.jpg",
     })
     assert findings_in(Path("photo.jpg"), "x")
     assert findings_in(Path("photo.png"), "x")

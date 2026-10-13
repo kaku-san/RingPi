@@ -19,9 +19,9 @@ faces/
 !assets/flow.png
 !assets/flow-dark.png
 !assets/social-preview.png
+!assets/hero.jpg
 *.webp
 *.mp4
-!assets/hero.mp4
 *.gguf
 *.onnx
 *.tflite

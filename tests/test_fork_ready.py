@@ -107,7 +107,7 @@ def test_launch_readme_order_and_art():
     from PIL import Image
 
     text = (ROOT / "README.md").read_text()
-    hero = text.index("assets/hero.gif")
+    hero = text.index("assets/hero.jpg")
     hook = text.index("Your doorbell, run by Grok. Local face recognition on a Raspberry Pi 5.")
     flow = text.index("assets/flow.png")
     features = text.index("## Features")
@@ -147,18 +147,13 @@ def test_launch_readme_order_and_art():
     assert flow_image.mode == "RGBA" and dark_flow.mode == "RGBA"
     assert flow_image.getpixel((0, 0))[3] == 0
     assert dark_flow.getpixel((0, 0))[3] == 0
-    hero_gif = Image.open(ROOT / "assets/hero.gif")
-    assert hero_gif.format == "GIF"
-    assert hero_gif.size[0] >= 800 and hero_gif.size[1] >= 450
-    duration = 0
-    for index in range(hero_gif.n_frames):
-        hero_gif.seek(index)
-        duration += hero_gif.info.get("duration", 0)
-    assert hero_gif.n_frames >= 8
-    assert 8000 <= duration <= 12000
-    assert (ROOT / "assets/hero.gif").stat().st_size < 5_000_000
-    assert (ROOT / "assets/hero.mp4").is_file()
-    assert (ROOT / "assets/hero.mp4").stat().st_size < 8_000_000
+    hero_image = Image.open(ROOT / "assets/hero.jpg")
+    assert hero_image.format == "JPEG"
+    assert hero_image.size == (1600, 900)
+    assert (ROOT / "assets/hero.jpg").stat().st_size < 800_000
+    assert not (ROOT / "assets/hero.gif").exists()
+    assert not (ROOT / "assets/hero.mp4").exists()
+    assert "assets/hero.gif" not in text and "assets/hero.mp4" not in text
 
 
 def test_leak_check_accepts_this_tree_and_rejects_samples():

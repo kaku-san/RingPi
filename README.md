@@ -1,6 +1,6 @@
 # RingPi
 
-![RingPi hero](assets/hero.gif)
+![RingPi hero](assets/hero.jpg)
 
 Your doorbell, run by Grok. Local face recognition on a Raspberry Pi 5.
 
